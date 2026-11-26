@@ -11,8 +11,9 @@ from tempfile import TemporaryDirectory
 SUPPORTED_ELF = "ec674eed6dac7045b4877dd22f36aa9088e43e58d81268c3a423273f1502d445"
 
 
-def prepare(game, nro, output):
-    if game.resolve() in (output.resolve(), *output.resolve().parents):
+def validate_inputs(game, output):
+    resolved = output.resolve()
+    if game.resolve() in (resolved, *resolved.parents):
         raise ValueError("Choose an output directory outside the Steam installation.")
     if output.exists() or output.is_symlink():
         raise ValueError(f"Choose a new output directory: {output}")
@@ -27,6 +28,11 @@ def prepare(game, nro, output):
         raise ValueError("Unsupported Psychonauts executable. See the README for the expected SHA-256.")
     if not any((resources / "Sounds").glob("*.isb")):
         raise ValueError("WorkResource/Sounds is missing the original .isb sound banks.")
+    return executable, package, resources
+
+
+def prepare(game, nro, output):
+    executable, package, resources = validate_inputs(game, output)
     with nro.open("rb") as stream:
         stream.seek(16)
         if stream.read(4) != b"NRO0":

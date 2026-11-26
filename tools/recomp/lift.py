@@ -735,7 +735,7 @@ def emit_insn(ins, need, fn_start, fn_end, switch_tables, label_targets, plt_map
             if fn_start <= tgt < fn_end and tgt in label_targets:
                 out.append(f"  goto L_{tgt:08x};")
             elif tgt in engine_funcs:
-                out.append(f"  fn_{tgt:08x}(ctx); return;")
+                out.append(f"  fn_{tgt:08x}(ctx, guest_memory); return;")
             elif tgt in plt_map:
                 out.append(f"  imp_{sanitize_c_ident(plt_map[tgt])}(ctx); ctx->eip = pop32(ctx); return;")
             elif tgt in HLE_EXTRA:
@@ -770,7 +770,7 @@ def emit_insn(ins, need, fn_start, fn_end, switch_tables, label_targets, plt_map
                 return
             out.append(f"  push32(ctx, 0x{addr + ins.size:08x}u);")
             if tgt in engine_funcs:
-                out.append(f"  fn_{tgt:08x}(ctx);")
+                out.append(f"  fn_{tgt:08x}(ctx, guest_memory);")
             elif tgt in plt_map:
                 out.append(f"  imp_{sanitize_c_ident(plt_map[tgt])}(ctx); ctx->eip = pop32(ctx);")
             elif tgt in HLE_EXTRA:
@@ -1012,7 +1012,7 @@ def emit_func_body(fn_name, fn_start, fn_end, insns, plt_map, engine_funcs, rdat
         if ins.address in switch_tables:
             label_targets.update(switch_tables[ins.address])
 
-    out = [f"void {fn_name}(CPUContext* ctx) {{"]
+    out = [f"void {fn_name}(CPUContext* ctx, uint8_t* guest_memory) {{"]
     out.append("  uint8_t cf = 0, zf = 0, sf = 0, of = 0, pf = 0;")
     out.append("  (void)cf; (void)zf; (void)sf; (void)of; (void)pf;")
     for i, ins in enumerate(insns):
@@ -1102,7 +1102,7 @@ def main():
         hf.write('#include "runtime/cpu.h"\n\n')
         hf.write("#ifdef __cplusplus\nextern \"C\" {\n#endif\n\n")
         for v, _, sym_name in funcs:
-            hf.write(f"void fn_{v:08x}(CPUContext* ctx);\n")
+            hf.write(f"void fn_{v:08x}(CPUContext* ctx, uint8_t* guest_memory);\n")
         hf.write("\n/* Imported / HLE thunks */\n")
         for imp in all_imports:
             hf.write(f"void imp_{sanitize_c_ident(imp)}(CPUContext* ctx);\n")
@@ -1130,7 +1130,7 @@ def main():
         df.write("#include <stdio.h>\n#include <stdlib.h>\n\n")
         for imp in all_imports:
             ci = sanitize_c_ident(imp)
-            df.write(f"static void _wimp_{ci}(CPUContext* ctx) {{ imp_{ci}(ctx); ctx->eip = pop32(ctx); }}\n")
+            df.write(f"static void _wimp_{ci}(CPUContext* ctx, uint8_t* guest_memory) {{ imp_{ci}(ctx); ctx->eip = pop32(ctx); }}\n")
         df.write("\n")
         df.write("typedef struct RecompDispatchEntry {\n    uint32_t addr;\n    RecompFn fn;\n} RecompDispatchEntry;\n\n")
         df.write(f"static const RecompDispatchEntry g_dispatch[{len(dispatch_entries)}] = {{\n")
@@ -1197,6 +1197,31 @@ RecompFn recomp_lookup(uint32_t addr) {
         if (ma == 0) return NULL;
         h = (h + 1u) & DISPATCH_HASH_MASK;
     }
+}
+""")
+
+        df.write(r"""extern uint64_t g_recomp_icall_count;
+
+void recomp_icall(CPUContext* ctx, uint32_t addr) {
+    g_recomp_icall_count++;
+    RecompFn fn = recomp_lookup(addr);
+    if (__builtin_expect(!fn, 0)) {
+        uint32_t ret_eip = mem_r32(ctx->esp);
+        fprintf(stderr, "[recomp] FATAL: unresolved indirect call to 0x%08x from ret=0x%08x (eax=0x%08x esp=0x%08x)\n",
+                addr, ret_eip, ctx->eax, ctx->esp);
+        abort();
+    }
+    fn(ctx, g_mem_base);
+}
+
+void recomp_tailcall(CPUContext* ctx, uint32_t addr) {
+    RecompFn fn = recomp_lookup(addr);
+    if (__builtin_expect(!fn, 0)) {
+        fprintf(stderr, "[recomp] FATAL: unresolved tailcall/jump to 0x%08x (esp=0x%08x)\n",
+                addr, ctx->esp);
+        abort();
+    }
+    fn(ctx, g_mem_base);
 }
 """)
 

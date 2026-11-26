@@ -28,17 +28,24 @@ The heavier camp panorama shows 39.7 FPS (25.2 ms) in a separate 720p handheld r
 
 ## Release contents
 
-The first release provides an SD preparation tool and these instructions. You need a compatible `Psychonauts.nro` from a local build and your own Steam installation. The public repository includes the ELF-to-C tool. A complete public build pipeline and a ready-to-play NRO are unavailable in this release. The lifter output alone lacks the runtime and integration work needed to build the Switch app.
+PsychoSW tools build the Switch NRO locally from your own Steam Linux installation. Download and extract the source package from [v0.2.0](https://github.com/i3sey/PsychoSW/releases/tag/v0.2.0), or check out this repository. The existing v0.1.0 ZIP also provides the standalone SD preparation utility for anyone who already has a compatible NRO.
+
+The local build uses a fresh translation of the Steam executable. The performance figures and screenshots above are from the earlier development build with additional optimizations.
 
 ## Prepare the microSD card
 
 1. On Linux, install [Psychonauts on Steam](https://store.steampowered.com/app/3830/Psychonauts/) using the native Linux build. If you forced Proton in **Properties → Compatibility**, disable it and let Steam install the Linux files.
 2. In Steam, open **Properties → Installed Files → Browse**. Find the directory with `Psychonauts` (the Linux ELF executable), `PsychonautsData2.pkg`, and `WorkResource`. Use a clean Steam installation. The expected SHA-256 of `Psychonauts` is `ec674eed6dac7045b4877dd22f36aa9088e43e58d81268c3a423273f1502d445`. On Linux, run `sha256sum "/path/to/Psychonauts/Psychonauts"` to check it.
-3. Download and extract the release ZIP. Open a terminal in the extracted directory and run the following command with Python 3. Replace both input paths with your own. Choose an output directory that does not exist yet.
+3. On x86-64 Linux with Docker running, install Python 3, its venv module, and DejaVu Sans Bold. Open a terminal in the repository checkout and run the commands below. The first run downloads a pinned devkitPro image. The game files stay on your computer. Choose a new output directory.
 
    ```bash
-   python3 prepare_switch_sd.py --game "/path/to/Steam/steamapps/common/Psychonauts" --nro "/path/to/local/Psychonauts.nro" --output sd-card
+   python3 -m venv .venv
+   . .venv/bin/activate
+   python -m pip install capstone==4.0.2 pyelftools==0.30 Pillow
+   python tools/build_switch_sd.py --game "/path/to/Steam/steamapps/common/Psychonauts" --output sd-card
    ```
+
+   If you already have a compatible NRO, you can instead run `python3 tools/prepare_switch_sd.py --game "/path/to/Psychonauts" --nro "/path/to/Psychonauts.nro" --output sd-card` from the checkout. In the v0.1.0 ZIP use `prepare_switch_sd.py` at the archive root.
 
 4. Copy the generated `sd-card/switch/` folder to the root of the microSD card. If the card already has a `switch` directory, merge the folders and keep a backup of any existing Psychonauts saves before replacing files. The finished layout should look like this.
 

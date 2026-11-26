@@ -15,3 +15,14 @@
 /screenshots/*
 !/screenshots/switch-camp-cabins.jpg
 !/screenshots/switch-camp-panorama.jpg
+!/CMakeLists.txt
+!/src/
+/src/*
+!/src/runtime/
+/src/runtime/*
+!/src/runtime/*.c
+!/src/runtime/*.h
+!/src/runtime/fiber_aarch64.S
+/src/runtime/launcher_font_atlas.h
+!/tools/build_switch_sd.py
+!/tools/gen_launcher_font.py
