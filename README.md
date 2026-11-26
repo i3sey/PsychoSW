@@ -4,14 +4,23 @@
 
 An unofficial static recompilation project targeting the original Nintendo Switch with a Steam Linux copy of Psychonauts.
 
+## Switch features
+
+- **Language and audio.** The launcher and quick settings support English and Russian. Game text and voice can be selected independently. With compatible local files, the launcher offers Buka's Russian dub and localized cutscenes, plus Buka or HSE/ZoG Russian text. The Steam setup below uses the original English resources. Russian localization files are supplied separately by the player.
+- **Controls.** On the default layout, B jumps, Y attacks, X uses an item, L locks on, and R/ZL/ZR activate PSI powers. The launcher can swap A/B and select Switch, Xbox, or PC button prompts when the corresponding assets are available. Press X on the profile name screen to open the Switch keyboard.
+- **Gyro and controller settings.** SixAxis aiming can activate on demand or also control the camera. The launcher offers axis inversion, a configurable stick deadzone, HD Rumble, and a subtitles toggle.
+- **Display and graphics.** Choose a 16:9 HUD and menus or the original 4:3 layout. Auto resolution uses 720p handheld and 1080p docked, with fixed modes available. Anisotropic texture filtering has Off, 8× and 16× settings. FXAA is an optional post-processing pass that smooths edges.
+- **Frame rate and quick settings.** Choose a 30 or 60 FPS cap and enable the FPS and frame-time overlay. Press **L + R + −** during gameplay to adjust common settings. The app saves settings in `RecompSettings.ini` and caches compiled shaders on the microSD card.
+- **Switch runtime.** Graphics commands run on a dedicated thread. OpenAL audio pauses when the console returns to HOME or goes to sleep and resumes when the game regains focus.
+
 ## Switch performance
 
 - **Overclocked CPU (1963.5 MHz)** — 57.6–59.6 FPS near the cabins at Whispering Rock in a handheld test. Performance varies with the camera angle and activity in the scene.
 - **Stock clocks** — around 40 FPS reported. A matching capture with recorded stock clocks is still pending.
 
-![Gameplay near the cabins with 60.0 FPS on the overlay](screenshots/switch-camp-cabins.jpg)
+![Gameplay at a cabin door with 62.7 FPS on the overlay](screenshots/switch-camp-cabins.jpg)
 
-The cabin capture shows 60.0 FPS (16.7 ms). Clock speeds were not recorded alongside this capture.
+The cabin-door capture shows an instantaneous 62.7 FPS (15.9 ms) during a separate test with reduced graphics effects. Clock speeds were not recorded alongside this capture.
 
 ![Camp panorama with 39.7 FPS on the overlay](screenshots/switch-camp-panorama.jpg)
 
