@@ -1,6 +1,6 @@
-# pshySW
+# PsychoSW
 
-[Русский](README.ru.md) · [GitHub Releases](https://github.com/i3sey/pshySW/releases)
+[Русский](README.ru.md) · [GitHub Releases](https://github.com/i3sey/PsychoSW/releases)
 
 An unofficial static recompilation project targeting the original Nintendo Switch with a Steam Linux copy of Psychonauts.
 
