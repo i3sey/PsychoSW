@@ -1,0 +1,13 @@
+# Publish only the reviewed tools and documentation.
+/*
+!/.gitignore
+!/README.md
+!/README.ru.md
+!/LICENSE
+!/THIRD_PARTY.md
+!/tools/
+/tools/*
+!/tools/prepare_switch_sd.py
+!/tools/recomp/
+/tools/recomp/*
+!/tools/recomp/lift.py
