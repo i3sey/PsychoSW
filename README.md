@@ -56,6 +56,28 @@ The first release provides an SD preparation tool and these instructions. You ne
 5. On a Switch already configured for homebrew, hold **R** while starting an installed title to open Homebrew Menu with full application memory. Select **Psychonauts**. The Album opens Homebrew Menu in applet mode with limited memory.
 6. In the launcher select original English game text and voices. The launcher interface can use either English or Russian. Press **L + R + −** in-game for the quick settings menu. If the game fails to start, check `switch/psychonauts/recomp.log`. If sound is missing, verify that the original `.isb` files are present in `WorkResource/Sounds`.
 
+### Russian text, voices, and cutscenes
+
+The launcher supports two Russian text options and one Russian dub, by Buka. Text and voice settings are independent, so you can pair ZoG text with Buka voices or use Russian text with the original English voices.
+
+1. Prepare a clean Steam Linux installation as described above. On your computer, extract each localization component into its own folder. For a Windows-only installer, apply it to a separate copy of the English PC version supported by that installer and collect the installed resources from there. Use a separate folder for each text variant so you can keep both.
+   - **Buka 2006** is available in Trup's adaptation. The guide lists separate text, audio, and video components as well as a complete bundle. [Trup's Steam Community guide](https://steamcommunity.com/sharedfiles/filedetails/?id=1563292349&l=russian)
+   - **Patched / HSE-ZoG** is the PsychoSW launcher label for the patched text slot. Choose **ZoG (XXI vek)** text in Rusik's installer. [Rusik's Steam Community guide](https://steamcommunity.com/sharedfiles/filedetails/?id=2199588804)
+   - **Buka Russian voices** use the audio component for in-game speech and the video component or complete bundle for localized cutscenes. Buka's store lists English as the language of its current Steam key. [Trup's guide](https://steamcommunity.com/sharedfiles/filedetails/?id=1563292349&l=russian) · [Buka store listing](https://shop.buka.ru/item/psychonauts)
+2. Open `switch/psychonauts/WorkResource/` on the microSD card. Copy the contents according to the table and preserve filenames and subfolders. Create the Russian directories alongside the original English resources.
+
+   | Component | Files from the localization | Destination inside `WorkResource/` |
+   | --- | --- | --- |
+   | Buka text | Russian `*_StringTable*.lub` tables from `Localization/English/` or the translation's text folder | `Localization/Russian_Buka/` |
+   | ZoG text | Russian `*_StringTable*.lub` tables from the installed ZoG variant | `Localization/Russian_Patched/` |
+   | Buka fonts | Cyrillic files from the Buka pack's `Fonts/` folder | `Fonts_Russian_Buka/` |
+   | ZoG fonts | Cyrillic files from the ZoG pack's `Fonts/` folder | `Fonts_Russian_Patched/` |
+   | Buka voices | Russian `.isb` sound banks and companion files from `Sounds/` | `Sounds_Russian/` |
+   | Russian cutscenes | The localized `cutscenes/` tree with `.bik` videos and any accompanying audio | `cutscenes_Russian/`, preserving the `prerendered/` subfolder |
+
+   If your pack supplies a compatible `common_rus.ppf`, place it at `PCLevelPackFiles/common_rus.ppf`. Both Russian text options use this optional file. The port looks for standalone cutscene audio as a matching MP3, for example `cutscenes_Russian/prerendered/INTRO.mp3`.
+3. Restart the port. In the launcher choose the text variant under **Game Text & Fonts** and independently select **Russian (Buka)** under **Voice & Cutscenes**. If a text option is missing, look for `GLOBAL_StringTable.lub` directly inside the corresponding `Russian_Buka` or `Russian_Patched` folder. The voice option requires `Sounds_Russian/commonvoice.isb`. If some lines or videos still play in English, check the individual files and directory layout. The port uses the original Steam file whenever a Russian replacement is missing.
+
 ## Local ELF-to-C translation
 
 Install Python dependencies in a virtual environment with `python3 -m pip install capstone pyelftools`. Use a fresh output directory so you preserve any existing generated code and manual optimizations.
