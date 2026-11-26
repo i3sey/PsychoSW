@@ -4,6 +4,19 @@
 
 An unofficial static recompilation project targeting the original Nintendo Switch with a Steam Linux copy of Psychonauts.
 
+## Switch performance
+
+- **Overclocked CPU (1963.5 MHz)** — 57.6–59.6 FPS near the cabins at Whispering Rock in a handheld test. Performance varies with the camera angle and activity in the scene.
+- **Stock clocks** — around 40 FPS reported. A matching capture with recorded stock clocks is still pending.
+
+![Gameplay near the cabins with 60.0 FPS on the overlay](screenshots/switch-camp-cabins.jpg)
+
+The cabin capture shows 60.0 FPS (16.7 ms). Clock speeds were not recorded alongside this capture.
+
+![Camp panorama with 39.7 FPS on the overlay](screenshots/switch-camp-panorama.jpg)
+
+The heavier camp panorama shows 39.7 FPS (25.2 ms) in a separate 720p handheld run with the CPU at 1963.5 MHz.
+
 ## Release contents
 
 The first release provides an SD preparation tool and these instructions. You need a compatible `Psychonauts.nro` from a local build and your own Steam installation. The public repository includes the ELF-to-C tool. A complete public build pipeline and a ready-to-play NRO are unavailable in this release. The lifter output alone lacks the runtime and integration work needed to build the Switch app.

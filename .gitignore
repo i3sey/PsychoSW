@@ -11,3 +11,7 @@
 !/tools/recomp/
 /tools/recomp/*
 !/tools/recomp/lift.py
+!/screenshots/
+/screenshots/*
+!/screenshots/switch-camp-cabins.jpg
+!/screenshots/switch-camp-panorama.jpg

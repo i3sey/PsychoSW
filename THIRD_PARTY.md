@@ -17,3 +17,10 @@ to those packages. The SD preparation tool uses the Python standard library.
 
 - [Capstone license](https://github.com/capstone-engine/capstone/tree/next/LICENSES)
 - [pyelftools license](https://github.com/eliben/pyelftools/blob/main/LICENSE)
+
+The gameplay screenshots depict Psychonauts and are included as performance
+documentation. Rights to the depicted game content remain with their respective
+holders.
+
+Скриншоты Psychonauts приведены для документирования производительности. Права на
+изображённые материалы игры принадлежат их правообладателям.
